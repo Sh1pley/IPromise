@@ -37,7 +37,11 @@ doResolve = (promise, exe) => {
     called = true;
     reject(promise, reason)
   }
-  exe(doesFulfill, doesReject)
+  try {
+    exe(doesFulfill, doesReject);
+  } catch (e) {
+    doesReject(e);
+  }
 }
 
 handleResolved = (promise, doesFulfill, doesReject) => {

@@ -4,6 +4,21 @@ const IPromise = require('./promise')
 const value = '😂';
 const reason = 'Broek! ☠️';
 
+describe('handling promise errors with REJECTED', () => {
+  it('it transitions to REJECTED state on error/fail ⁉️', () => {
+    const error = new Error('I failed! 💔');
+    const doesReject = jest.fn();
+    const promise = new IPromise((fulfill, reject) => {
+      throw error;
+    })
+
+    promise.then(null, doesReject);
+    expect(doesReject.mock.calls.length).toBe(1);
+    expect(doesReject.mock.calls[0][0]).toBe(error);
+    expect(promise.state === 'REJECTED');
+  })
+})
+
 it('it should not be FULFILLED once a promise has been REJECTED', () => {
   const doesFulfill = jest.fn();
   const doesReject = jest.fn();
