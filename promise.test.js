@@ -4,6 +4,35 @@ const IPromise = require('./promise')
 const value = '😂';
 const reason = 'Broek! ☠️';
 
+it('it should not be FULFILLED once a promise has been REJECTED', () => {
+  const doesFulfill = jest.fn();
+  const doesReject = jest.fn();
+  const promise = new IPromise((fulfill, reject) => {
+    reject(reason);
+    fulfill(value);
+  });
+  promise.then(doesFulfill, doesReject);
+
+  expect(doesReject.mock.calls.length).toBe(1);
+  expect(doesReject.mock.calls[0][0]).toBe(reason);
+  expect(doesFulfill.mock.calls.length).toBe(0);
+  expect(promise.state === 'REJECTED');
+})
+
+it('it should not be REJECTED once a promise has FULFILLED', () => {
+  const doesFulfill = jest.fn();
+  const doesReject = jest.fn();
+  const promise = new IPromise((fulfill, reject) => {
+    fulfill(value);
+    reject(reason)
+  });
+  promise.then(doesFulfill, doesReject);
+
+  expect(doesFulfill.mock.calls.length).toBe(1);
+  expect(doesFulfill.mock.calls[0][0]).toBe(value);
+  expect(doesReject.mock.calls.length).toBe(0);
+  expect(promise.state === 'FULFILLED');
+})
 
 it('it should have .then method', () => {
   const promise = new IPromise(()=>{});
@@ -11,7 +40,7 @@ it('it should have .then method', () => {
   expect(typeof promise.then).toBe('function')
 })
 
-it('it should call the doesFulfill method when promise is FULFILLED', () => {
+it('it should call the doesFulfill 😉 method when promise is FULFILLED', () => {
   const doesFulfill = jest.fn();
   const promise = new IPromise((fulfill, reject) => {
     fulfill(value);
@@ -22,7 +51,7 @@ it('it should call the doesFulfill method when promise is FULFILLED', () => {
   expect(doesFulfill.mock.calls[0][0]).toBe(value);
 })
 
-it('it transitions to REJECTED with reason', () => {
+it('it transitions to REJECTED ☠️ with reason', () => {
   const doesReject = jest.fn();
   const promise = new IPromise((fulfill, reject) => {
     reject(reason);
@@ -48,7 +77,7 @@ it('it enters a PENDING state', () => {
   expect(promise.state).toBe('PENDING');
 })
 
-it('it transitions to a FULFILLED state with a resolved value', () => {
+it('it transitions to a FULFILLED 🏁 state with a resolved value', () => {
   const promise = new IPromise((fulfill, reject)=> {
     fulfill(value);
   })

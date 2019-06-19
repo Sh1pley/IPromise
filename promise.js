@@ -24,11 +24,17 @@ reject = (promise, reason) => {
 }
 
 doResolve = (promise, exe) => {
+  let called = false;
+
   doesFulfill = (value) => {
+    if (called) {return}
+    called = true;
     fulfill(promise, value)
   }
 
   doesReject = (reason) => {
+    if (called) {return}
+    called = true;
     reject(promise, reason)
   }
   exe(doesFulfill, doesReject)
