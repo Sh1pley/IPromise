@@ -5,7 +5,11 @@ class IPromise {
     // set initial state to 'PENDING'
     this.state = PENDING
 
-    doResolve(this, exe)
+    doResolve(this, exe);
+  }
+
+  then(doesFulfill, doesReject) {
+    handleResolved(this, doesFulfill, doesReject);
   }
 }
 
@@ -28,6 +32,11 @@ doResolve = (promise, exe) => {
     reject(promise, reason)
   }
   exe(doesFulfill, doesReject)
+}
+
+handleResolved = (promise, doesFulfill, doesReject) => {
+  const callback = promise.state == FULFILLED ? doesFulfill : doesReject;
+  callback(promise.value)
 }
 
 module.exports = IPromise;
