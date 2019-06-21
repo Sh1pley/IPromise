@@ -3,14 +3,21 @@ const PENDING = 'PENDING', FULFILLED = 'FULFILLED', REJECTED = 'REJECTED';
 class IPromise {
   constructor(exe) {
     // set initial state to 'PENDING'
-    this.state = PENDING
-
+    this.state = PENDING;
+    // queue
+    this.queue = [];
     doResolve(this, exe);
   }
 
   then(doesFulfill, doesReject) {
-    handleResolved(this, doesFulfill, doesReject);
+    willHandle(this, { doesFulfill, doesReject });
   }
+}
+
+willHandle = (promise, willDo) => {
+  if (promise.state === PENDING) {
+    promise.queue.push(willDo)
+  } else handleResolved(promise, willDo)
 }
 
 fulfill = (promise, value) => {
@@ -44,8 +51,8 @@ doResolve = (promise, exe) => {
   }
 }
 
-handleResolved = (promise, doesFulfill, doesReject) => {
-  const callback = promise.state == FULFILLED ? doesFulfill : doesReject;
+handleResolved = (promise, willDo) => {
+  const callback = promise.state === FULFILLED ? willDo.doesFulfill : willDo.doesReject;
   callback(promise.value)
 }
 
