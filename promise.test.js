@@ -4,6 +4,27 @@ const IPromise = require('./promise')
 const value = '😂';
 const reason = 'Broek! ☠️';
 
+describe('promise should return a new promise', () => {
+  it('chaining promises should not cause an error', () => {
+    expect(() => {
+      const qFulfill = jest.fn();
+      const rFulfill = jest.fn();
+      const promise = new IPromise(fulfill => fulfill());
+      const q = promise.then(qFulfill);
+      const r = q.then(rFulfill);
+    }).not.toThrow()
+  })
+  it('chaining real promises should not cause an error', () => {
+    expect(() => {
+      const qFulfill = jest.fn();
+      const rFulfill = jest.fn();
+      const promise = new Promise(fulfill => fulfill());
+      const q = promise.then(qFulfill);
+      const r = q.then(rFulfill);
+    }).not.toThrow()
+  })
+})
+
 describe('handling Async requests ➰', () => {
   it('it should queue callbacks when promise not immediately FULFILLED', () => {
     const doesFulfill = jest.fn();
